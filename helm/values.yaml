@@ -1,0 +1,16 @@
+
+openaiApiKey: ""
+keyOwner: ""
+forkedSimulName: "base_the_ville_isabella_maria_klaus"
+newSimulName: "test-simulation"
+
+image: 
+  registry: ""
+  repository: "library/genagt-environment"
+  tag: ""
+  pullPolicy: IfNotPresent
+
+environment:
+  port: 8000
+
+reverie: {}

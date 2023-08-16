@@ -1,0 +1,20 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+build:
+  artifacts:
+  - image: genagt
+    context: .
+
+deploy:
+  helm:
+    releases:
+    - name: genagt
+      chartPath: helm
+      skipBuildDependencies: true
+      setValueTemplates:
+        image.registry: '{{ .IMAGE_DOMAIN_genagt }}'
+        image.repository: '{{ .IMAGE_REPO_NO_DOMAIN_genagt }}'
+        image.tag: '{{ .IMAGE_TAG_genagt }}'
+        image.digest: '{{ .IMAGE_DIGEST_genagt }}'
+        openaiApiKey: '{{ .OPENAI_API_KEY }}'
+        keyOwner: '{{ .KEY_OWNER }}'

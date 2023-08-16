@@ -35,6 +35,10 @@ from utils import *
 from maze import *
 from persona.persona import *
 
+
+FORKED_SIMUL_NAME = os.environ["FORKED_SIMUL_NAME"]
+NEW_SIMUL_NAME = os.environ["NEW_SIMUL_NAME"]
+
 ##############################################################################
 #                                  REVERIE                                   #
 ##############################################################################
@@ -605,8 +609,15 @@ if __name__ == '__main__':
   #                    "July1_the_ville_isabella_maria_klaus-step-3-21")
   # rs.open_server()
 
-  origin = input("Enter the name of the forked simulation: ").strip()
-  target = input("Enter the name of the new simulation: ").strip()
+  if FORKED_SIMUL_NAME == "": 
+    origin = input("Enter the name of the forked simulation: ").strip()
+  else:
+    origin = FORKED_SIMUL_NAME
+    
+  if NEW_SIMUL_NAME == "": 
+    target = input("Enter the name of the new simulation: ").strip()
+  else:
+    target = NEW_SIMUL_NAME
 
   rs = ReverieServer(origin, target)
   rs.open_server()

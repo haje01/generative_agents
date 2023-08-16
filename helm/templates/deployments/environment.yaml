@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "genagt.fullname" . }}-environment
+  labels:
+    {{- include "genagt.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "genagt.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.environment.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "genagt.selectorLabels" . | nindent 8 }}
+        app: genagt-environment
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-environment
+          image: {{ include "genagt.image" .Values.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ['/bin/sh', '-c']
+          args: ['cd /app/environment/frontend_server && python manage.py runserver 0.0.0.0:8000']
+          # ports:
+          #   - name: http
+          #     containerPort: 8000
+          #     protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.environment.resources | nindent 12 }}
+      {{- with .Values.environment.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.environment.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.environment.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

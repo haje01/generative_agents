@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "genagt.fullname" . }}-reverie
+  labels:
+    {{- include "genagt.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "genagt.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.reverie.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "genagt.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-reverie
+          image: {{ include "genagt.image" .Values.image }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # command: ['python', 'reverie.py']
+          command: ['sleep', 'infinity']
+          env:
+          - name: OPENAI_API_KEY
+            value: {{ .Values.openaiApiKey }}
+          - name: KEY_OWNER
+            value: {{ .Values.keyOwner }}
+          - name: FORKED_SIMUL_NAME
+            value: {{ .Values.forkedSimulName }}
+          - name: NEW_SIMUL_NAME
+            value: {{ .Values.newSimulName }}
+          # ports:
+          #   - name: http
+          #     containerPort: 80
+          #     protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          resources:
+            {{- toYaml .Values.reverie.resources | nindent 12 }}
+      {{- with .Values.reverie.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.reverie.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.reverie.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
